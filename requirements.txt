@@ -1,0 +1,15 @@
+# Python Slack SDK - replaces @slack/bolt
+slack_sdk==3.21.0
+slack_bolt==1.18.0
+
+# Flask web framework and related extensions
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Migrate==4.0.4
+python-dotenv==1.0.0
+
+# PostgreSQL adapter
+psycopg2-binary==2.9.7
+
+# Production WSGI server
+gunicorn==21.2.0

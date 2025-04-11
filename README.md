@@ -74,3 +74,20 @@ This bot can be deployed to DigitalOcean or any other hosting provider.
 ## License
 
 This project is private and intended for the Abide community.
+
+## Purpose
+
+This application serves two purposes: 
+
+**Primary Goal:** For learning purposes including but not limited to
+1. Containerization using Docker
+2. CI/CD using Github actions
+3. Deployment using Digital Ocean
+4. Python/Flask development practice
+
+**Secondary Goal:** To create an onboarding app for new members of the slack workspace
+
+
+## Learning Notes
+
+[Flask Application Factory Patter](./notes/FLASK_APPLICATION_FACTORY_PATTERN.md)
