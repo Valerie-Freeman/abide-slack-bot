@@ -30,7 +30,7 @@ sequenceDiagram
     Note over wsgi,db: Application is now fully configured and running
 ```
 
-This diagram visualizes the Flask application factory pattern we've been discussing. Let me explain the key aspects:
+This diagram visualizes the Flask application factory pattern. 
 
 1. **Initialization Flow:**
      - The process starts in `wsgi.py` when it calls `create_app('production')`

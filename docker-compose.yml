@@ -3,30 +3,38 @@ version: "3.8"
 services:
   web:
     build: .
+    restart: always
     ports:
       - "5000:5000"
+    depends_on:
+      - db
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/abidebot
+      - FLASK_APP_ENV=production
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/abide_slack_bot
       - SLACK_BOT_TOKEN=${SLACK_BOT_TOKEN}
       - SLACK_SIGNING_SECRET=${SLACK_SIGNING_SECRET}
       - SLACK_APP_TOKEN=${SLACK_APP_TOKEN}
-    depends_on:
-      - db
-    restart: always
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
-      - ./app:/app/app
+      - ./.data:/app/.data
+    networks:
+      - abide-network
 
   db:
-    image: postgres:15
+    image: postgres:13
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=abide_slack_bot
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=abidebot
-    restart: always
-    ports:
-      - "5432:5432"
+    networks:
+      - abide-network
+
+networks:
+  abide-network:
+    driver: bridge
 
 volumes:
   postgres_data:

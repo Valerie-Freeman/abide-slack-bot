@@ -1,79 +1,139 @@
 # Abide Slack Bot
 
-A Slack onboarding bot for the Abide Slack workspace that guides new members through setting up their account.
-
-## Project Overview
-
-The Abide bot helps new members with:
-- Understanding what Abide is about
-- Setting up their Slack profile
-- Adding the Google Calendar
-- Understanding channels and notifications
-- Sending direct messages
-- Inviting others to the workspace
+A custom onboarding bot for the Abide Slack workspace, built with Python, Flask, and PostgreSQL.
 
 ## Features
 
-- Interactive onboarding with button-based progression
-- Seven-step onboarding process
-- State management to track user progress
+- Automatically onboards new users when they join the workspace
+- Guides users through a multi-step setup process
+- Uses interactive buttons for engagement
+- Persists user state in a database
+- Containerized for reliable deployment
+- CI/CD pipeline for automated testing and deployment
 
-## Setup Requirements
+## Tech Stack
 
-### Environment Variables
-Create a `.env` file with:
-```
-SLACK_BOT_TOKEN=xoxb-your-bot-token-here
-SLACK_SIGNING_SECRET=your-signing-secret-here
-SLACK_APP_TOKEN=xapp-your-app-token-here
-```
+- **Backend**: Python Flask
+- **Database**: PostgreSQL
+- **ORM**: SQLAlchemy
+- **Containerization**: Docker & Docker Compose
+- **CI/CD**: GitHub Actions
+- **Hosting**: DigitalOcean
 
-### Slack App Configuration
-- Enable Socket Mode in app settings
-- Generate App-Level Token with connections:write scope
-- Add necessary Bot Token Scopes:
-  * app_mentions:read
-  * chat:write
-  * im:history
-  * im:read
-  * im:write
-  * users:read
-- Enable App Home with both Home Tab and Messages Tab
-- Subscribe to bot events:
-  * message.im
-  * app_mention
-  * message.channels (if needed)
+## Local Development Setup
 
-## Installation
+### Prerequisites
 
-1. Clone the repository
-```bash
-git clone https://github.com/yourusername/abide-slack-bot.git
-cd abide-slack-bot
-```
+- Docker and Docker Compose
+- Slack API credentials (Bot Token, Signing Secret, App Token)
 
-2. Install dependencies
-```bash
-npm install
-```
+### Environment Setup
 
-3. Start the bot
-```bash
-npm start
-```
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/your-username/abide-slack-bot.git
+   cd abide-slack-bot
+   ```
 
-For development with auto-restart:
-```bash
-npm run dev
-```
+2. Create a `.env` file with your Slack credentials:
+   ```
+   SLACK_BOT_TOKEN=xoxb-your-bot-token-here
+   SLACK_SIGNING_SECRET=your-signing-secret-here
+   SLACK_APP_TOKEN=xapp-your-app-token-here
+   SECRET_KEY=your-secret-key
+   ```
+
+3. Start the development environment:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. Initialize the database:
+   ```bash
+   docker-compose exec web flask db upgrade
+   ```
+
+5. View logs:
+   ```bash
+   docker-compose logs -f
+   ```
+
+## Slack App Configuration
+
+### App Permissions
+
+The following Bot Token Scopes are required:
+- `app_mentions:read`
+- `chat:write`
+- `im:history`
+- `im:read`
+- `im:write`
+- `users:read`
+
+### Event Subscriptions
+
+Subscribe to the following bot events:
+- `message.im`
+- `app_mention`
+- `team_join`
+
+### Enable Socket Mode
+
+Socket Mode allows the bot to receive events without exposing a public URL:
+
+1. Go to your app settings on [api.slack.com](https://api.slack.com/apps)
+2. Enable Socket Mode
+3. Generate an App-Level Token with the `connections:write` scope
+4. Add this token as `SLACK_APP_TOKEN` in your environment
 
 ## Deployment
 
-This bot can be deployed to DigitalOcean or any other hosting provider.
+### DigitalOcean Droplet Setup
+
+1. Create a new Ubuntu droplet on DigitalOcean
+2. SSH into your droplet
+3. Clone this repository
+4. Run the setup script:
+   ```bash
+   chmod +x scripts/setup_droplet.sh
+   ./scripts/setup_droplet.sh
+   ```
+
+### GitHub Actions Setup
+
+To enable automated deployments:
+
+1. Go to your GitHub repository settings
+2. Add the following secrets:
+   - `DROPLET_IP`: Your DigitalOcean droplet IP
+   - `DROPLET_USER`: SSH username (usually 'root')
+   - `DROPLET_SSH_KEY`: Your private SSH key
+   - `DROPLET_SSH_PASSPHRASE`: Your SSH key passphrase (if applicable)
+
+## Project Structure
+
+```
+abide-slack-bot/
+├── app/                    # Application package
+│   ├── __init__.py         # Application factory
+│   ├── config.py           # Configuration
+│   ├── bot/                # Bot logic
+│   │   ├── routes.py       # HTTP routes
+│   │   └── handlers.py     # Event handlers
+│   ├── models/             # Database models
+│   └── onboarding/         # Onboarding process
+│       └── steps.py        # Step definitions
+├── migrations/             # Database migrations
+├── .github/workflows/      # CI/CD configuration
+├── docker-compose.yml      # Container orchestration
+├── Dockerfile              # Container definition
+├── requirements.txt        # Python dependencies
+└── wsgi.py                 # Application entry point
+```
 
 ## License
 
-This project is private and intended for the Abide community.
+[MIT License](LICENSE)
 
 ## Purpose
 
