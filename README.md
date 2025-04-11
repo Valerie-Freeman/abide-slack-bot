@@ -90,4 +90,4 @@ This application serves two purposes:
 
 ## Learning Notes
 
-[Flask Application Factory Patter](./notes/FLASK_APPLICATION_FACTORY_PATTERN.md)
+[Flask Application Factory Pattern](./notes/FLASK_APPLICATION_FACTORY_PATTERN.md)
