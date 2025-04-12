@@ -4,6 +4,8 @@ services:
   web:
     build: .
     restart: always
+    entrypoint: ["/app/entrypoint.sh"]
+    command: ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]
     ports:
       - "5000:5000"
     depends_on:

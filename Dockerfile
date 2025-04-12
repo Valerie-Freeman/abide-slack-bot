@@ -9,24 +9,36 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
   FLASK_APP=wsgi.py
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && \
+  apt-get install -y --no-install-recommends \
   gcc \
   python3-dev \
   libpq-dev \
   postgresql-client \
+  && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies in stages to identify issues
+# Install Python dependencies in stages for better caching
 COPY requirements.txt .
-RUN pip install --upgrade pip && \
-  pip install --no-cache-dir setuptools wheel && \
-  pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Upgrade pip first to avoid issues
+RUN pip install --no-cache-dir --upgrade pip && \
+  pip install --no-cache-dir setuptools wheel
+
+# Use --no-deps to avoid dependency resolution issues
+RUN pip install --no-cache-dir --no-deps -r requirements.txt || cat /tmp/pip-error.log
+
+# Now install with deps for the packages that need them
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy project files
 COPY . .
 
-# Create the data directory if not exists
+# Create the data directory
 RUN mkdir -p .data
+
+# Make the entrypoint script executable
+RUN if [ -f entrypoint.sh ]; then chmod +x entrypoint.sh; fi
 
 # Run gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]

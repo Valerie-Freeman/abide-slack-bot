@@ -1,8 +1,13 @@
-import os
-from dotenv import load_dotenv
+"""Application configuration."""
 
-# Load environment variables from .env file
-load_dotenv()
+import os
+
+# Try to import dotenv, but don't fail if it's not available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    print("python-dotenv not installed. Environment variables must be set manually.")
 
 class Config:
     """Base configuration."""

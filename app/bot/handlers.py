@@ -1,10 +1,15 @@
 """Event handlers for Slack interactions."""
 
-from slack_sdk.errors import SlackApiError
+# Standard library imports
+import logging
 
+# Database imports
 from app import db
 from app.models.user import User
 from app.onboarding.steps import get_onboarding_steps
+
+# Set up logger
+logger = logging.getLogger(__name__)
 
 def register_handlers(app):
     """Register event handlers with the Slack app."""
@@ -99,8 +104,8 @@ def restart_onboarding(client, user_id):
             blocks=step_data['message']['blocks']
         )
         
-    except SlackApiError as e:
-        print(f"Error restarting onboarding: {e}")
+    except Exception as e:
+        logger.error(f"Error restarting onboarding: {e}")
 
 def start_onboarding(client, user_id):
     """Start the onboarding process for a new user."""
@@ -128,8 +133,8 @@ def start_onboarding(client, user_id):
             blocks=step_data['message']['blocks']
         )
         
-    except SlackApiError as e:
-        print(f"Error starting onboarding: {e}")
+    except Exception as e:
+        logger.error(f"Error starting onboarding: {e}")
 
 def go_to_next_step(client, user_id):
     """Advance the user to the next onboarding step."""
@@ -163,6 +168,6 @@ def go_to_next_step(client, user_id):
             # Mark onboarding as completed
             user.completed = True
             db.session.commit()
-            print(f"User {user_id} completed all steps")
-    except SlackApiError as e:
-        print(f"Error advancing to next step: {e}")
+            logger.info(f"User {user_id} completed all steps")
+    except Exception as e:
+        logger.error(f"Error advancing to next step: {e}")
