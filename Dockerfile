@@ -11,12 +11,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
   gcc \
+  python3-dev \
+  libpq-dev \
   postgresql-client \
   && rm -rf /var/lib/apt/lists/*
 
-# Install Python dependencies
+# Install Python dependencies in stages to identify issues
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --upgrade pip && \
+  pip install --no-cache-dir setuptools wheel && \
+  pip install --no-cache-dir -r requirements.txt
 
 # Copy project
 COPY . .
