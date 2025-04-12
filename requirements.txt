@@ -15,8 +15,8 @@ psycopg2-binary==2.9.6
 # Environment variables
 python-dotenv==1.0.0
 
-# Slack
-slack-sdk==3.21.0
+# Slack - fixed version conflict
+slack-sdk==3.21.2
 slack-bolt==1.18.0
 
 # Production server
